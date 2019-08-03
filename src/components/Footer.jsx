@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 
-import './style.css'
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import InputBase from '@material-ui/core/InputBase';
+
+
 const FILTERS = [
 	{
 		id: uuid.v4(),
@@ -19,20 +24,22 @@ const FILTERS = [
 ];
 
 const Footer = ({ amount, activeFilter, changeFilter }) => (
-	<div className="footer">
-		<span className="amount">{amount}</span>
-		<div className="buttons">
+	<Grid item>
+		<InputBase
+			inputProps={{ value: 'Number of items: ' + amount }}
+		/>
+		<ButtonGroup size="small" aria-label="small outlined button group">
 			{FILTERS.map(({ id, name }) => (
-				<button
+				<Button
+					disabled={name === activeFilter ? true : false}
 					onClick={() => changeFilter(name)}
 					key={id}
-					className={name === activeFilter ? 'active-button' : ''}
 				>
 					{name}
-				</button>
+				</Button>
 			))}
-		</div>
-	</div>
+		</ButtonGroup>
+	</Grid>
 );
 
 Footer.propTypes = {

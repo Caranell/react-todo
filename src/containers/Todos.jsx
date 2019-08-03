@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import uuid from 'uuid';
+import TodoList from '../components/TodoList';
+import AddTodo from '../components/AddTodo';
+import Footer from '../components/Footer';
 
-import TodoList from '../components/todo-list/TodoList';
-import AddTodo from '../components/add-todo/AddTodo';
-import Footer from '../components/footer/Footer';
-
+import Grid from '@material-ui/core/Grid';
 class Todos extends Component {
 	state = {
 		items: [
@@ -37,17 +37,22 @@ class Todos extends Component {
 			})
 		});
 	};
-	addItem = e => {
+
+	addItem = (e, value) => {
 		if (e.key === 'Enter') {
-			const newItem = {
-				id: uuid.v4(),
-				text: e.currentTarget.value,
-				completed: false
-			};
-			this.setState({
-				items: [...this.state.items, newItem],
-				filter: this.state.filter
-			});
+			const value = e.target.value.trim();
+			if (value !== '') {
+				const newItem = {
+					id: uuid.v4(),
+					text: value,
+					completed: false
+				};
+				e.target.value = '';
+				this.setState({
+					items: [...this.state.items, newItem],
+					filter: this.state.filter
+				});
+			}
 		}
 	};
 
@@ -69,6 +74,7 @@ class Todos extends Component {
 				return this.state.items;
 		}
 	};
+
 	changeFilter = newFilter => {
 		this.setState({
 			filter: newFilter
@@ -79,7 +85,12 @@ class Todos extends Component {
 		let { filter } = this.state;
 		let filteredItems = this.filterItems(filter);
 		return (
-			<Fragment>
+			<Grid
+				container
+				direction="column"
+				justify="space-between"
+				alignItems="center"
+			>
 				<AddTodo
 					onKeyPress={this.addItem}
 					handleEnter={this.handleEnter}
@@ -95,7 +106,7 @@ class Todos extends Component {
 					activeFilter={this.state.filter}
 					changeFilter={this.changeFilter}
 				/>
-			</Fragment>
+			</Grid>
 		);
 	}
 }
