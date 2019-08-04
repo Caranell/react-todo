@@ -17,39 +17,39 @@ const useStyles = makeStyles({
 	standard: {}
 });
 
-const TodoItem = ({ item, toggleComplete, deleteItem }) => {
+const TodoItem = ({ completed, text, toggleComplete, deleteItem }) => {
 	const classes = useStyles();
 	return (
 		<Grid item>
-			<Grid item>
-				<FormControlLabel
-					control={
-						<Checkbox
-							icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-							checkedIcon={<CheckBoxIcon fontSize="small" />}
-							value="checkedI"
-							checked={item.completed}
-							onClick={() => toggleComplete(item.id)}
-						/>
-					}
-					label={item.text}
-					className={item.completed ? classes.done : classes.standard}
-				/>
-				<IconButton
-					aria-label="delete"
-					className="makeStyles-margin-36"
-					onClick={() => deleteItem(item.id)}
-				>
-					<DeleteIcon fontSize="small" />
-				</IconButton>
-			</Grid>
+			<FormControlLabel
+				control={
+					<Checkbox
+						icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+						checkedIcon={<CheckBoxIcon fontSize="small" />}
+						value="checkedI"
+						checked={completed}
+						onClick={toggleComplete}
+					/>
+				}
+				label={text}
+				className={completed ? classes.done : classes.standard}
+			/>
+			<IconButton
+				aria-label="delete"
+				className="makeStyles-margin-36"
+				onClick={deleteItem}
+			>
+				<DeleteIcon fontSize="small" />
+			</IconButton>
 		</Grid>
 	);
 };
 
 TodoItem.propTypes = {
-	item: PropTypes.object.isRequired,
-	toggleComplete: PropTypes.func.isRequired
+	text: PropTypes.string.isRequired,
+	completed: PropTypes.bool.isRequired,
+	toggleComplete: PropTypes.func.isRequired,
+	deleteItem: PropTypes.func.isRequired
 };
 
 export default TodoItem;

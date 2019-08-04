@@ -1,57 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
-
+import Filter from './Filter';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import InputBase from '@material-ui/core/InputBase';
+import { FILTERS } from '../actions';
 
-
-const FILTERS = [
-	{
-		id: uuid.v4(),
-		name: 'all'
-	},
-	{
-		id: uuid.v4(),
-		name: 'active'
-	},
-	{
-		id: uuid.v4(),
-		name: 'completed'
-	}
-];
-
-const Footer = ({ amount, activeFilter, changeFilter }) => (
+const Footer = ({ amount}) => (
 	<Grid item>
-		<InputBase
-			inputProps={{ value: 'Number of items: ' + amount }}
-		/>
+		<InputBase inputProps={{ value: 'Number of items: ' + amount }} />
 		<ButtonGroup size="small" aria-label="small outlined button group">
-			{FILTERS.map(({ id, name }) => (
-				<Button
-					disabled={name === activeFilter ? true : false}
-					onClick={() => changeFilter(name)}
-					key={id}
-				>
-					{name}
-				</Button>
-			))}
+			<Filter filter={FILTERS.ALL}>ALL</Filter>
+			<Filter filter={FILTERS.ACTIVE}>ACTIVE</Filter>
+			<Filter filter={FILTERS.COMPLETED}>COMPLETED</Filter>
 		</ButtonGroup>
 	</Grid>
 );
 
 Footer.propTypes = {
-	amount: PropTypes.number,
-	activeFilter: PropTypes.string,
-	changeFilter: PropTypes.func
-};
-
-Footer.defaultProps = {
-	amount: 0,
-	activeFilter: 'all',
-	changeFilter: () => {}
+	amount: PropTypes.number.isRequired
 };
 
 export default Footer;

@@ -1,25 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addItem } from '../actions';
 
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
-const AddTodo = ({ onKeyPress }) => (
+const AddTodo = ({ dispatch }) => (
 	<Grid item>
 		<TextField
 			multiline
 			rowsMax="2"
-			onKeyPress={e => onKeyPress(e, this)}
+			onKeyPress={e => {
+				if (e.key === 'Enter') {
+					const value = e.target.value.trim();
+					if (value !== '') {
+						dispatch(addItem(value));
+					}
+					e.target.value = '';
+				}
+			}}
 			helperText="press Enter to add new one"
 		/>
 	</Grid>
 );
 
-AddTodo.propTypes = {
-	addItem: PropTypes.func.isRequired
-};
-
-AddTodo.defaultProps = {
-	addItem: () => {}
-};
-export default AddTodo;
+export default connect()(AddTodo);

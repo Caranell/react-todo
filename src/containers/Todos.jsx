@@ -1,114 +1,60 @@
 import React, { Component } from 'react';
-import uuid from 'uuid';
+import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import AddTodo from '../components/AddTodo';
 import Footer from '../components/Footer';
 
+import { toggleItem, deleteItem } from '../actions';
+import { FILTERS } from '../actions';
 import Grid from '@material-ui/core/Grid';
+
+const getFilteredItems = (items, filter) => {
+	switch (filter) {
+		case FILTERS.ALL:
+			return items;
+		case FILTERS.ACTIVE:
+			return items.filter(item => !item.completed);
+		case FILTERS.COMPLETED:
+			return items.filter(item => item.completed);
+		default:
+			throw new Error('Cannot recognize filter');
+	}
+};
+
+const mapStateToProps = state => {
+	return {
+		items: getFilteredItems(state.items, state.activeFilter)
+	};
+};
+
+const mapDispatchToProps = dispatch => ({
+	toggleItem: id => dispatch(toggleItem(id)),
+	deleteItem: id => dispatch(deleteItem(id))
+});
+
 class Todos extends Component {
-	state = {
-		items: [
-			{
-				id: uuid.v4(),
-				text: 'visit doctor',
-				completed: false
-			},
-			{
-				id: uuid.v4(),
-				text: 'buy milk',
-				completed: true
-			},
-			{
-				id: uuid.v4(),
-				text: 'play mario',
-				completed: true
-			}
-		],
-		filter: 'all'
-	};
-
-	toggleComplete = id => {
-		this.setState({
-			items: this.state.items.map(item => {
-				if (id === item.id) {
-					item.completed = !item.completed;
-				}
-				return item;
-			})
-		});
-	};
-
-	addItem = (e, value) => {
-		if (e.key === 'Enter') {
-			const value = e.target.value.trim();
-			if (value !== '') {
-				const newItem = {
-					id: uuid.v4(),
-					text: value,
-					completed: false
-				};
-				e.target.value = '';
-				this.setState({
-					items: [...this.state.items, newItem],
-					filter: this.state.filter
-				});
-			}
-		}
-	};
-
-	deleteItem = id => {
-		this.setState({
-			items: this.state.items.filter(item => item.id !== id)
-		});
-	};
-
-	filterItems = filter => {
-		switch (filter) {
-			case 'active': {
-				return this.state.items.filter(item => !item.completed);
-			}
-			case 'completed': {
-				return this.state.items.filter(item => item.completed);
-			}
-			default:
-				return this.state.items;
-		}
-	};
-
-	changeFilter = newFilter => {
-		this.setState({
-			filter: newFilter
-		});
-	};
-
 	render() {
-		let { filter } = this.state;
-		let filteredItems = this.filterItems(filter);
+		const { toggleItem, deleteItem, items } = this.props;
 		return (
 			<Grid
 				container
 				direction="column"
-				justify="space-between"
+				justify="space-around"
 				alignItems="center"
 			>
-				<AddTodo
-					onKeyPress={this.addItem}
-					handleEnter={this.handleEnter}
-				/>
+				<AddTodo />
 				<TodoList
-					items={filteredItems}
-					addItem={this.addItem}
-					toggleComplete={this.toggleComplete}
-					deleteItem={this.deleteItem}
+					items={items}
+					toggleComplete={toggleItem}
+					deleteItem={deleteItem}
 				/>
-				<Footer
-					amount={filteredItems.length}
-					activeFilter={this.state.filter}
-					changeFilter={this.changeFilter}
-				/>
+				<Footer amount={items.length} />
 			</Grid>
 		);
 	}
 }
 
-export default Todos;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Todos);

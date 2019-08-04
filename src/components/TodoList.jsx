@@ -1,33 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import Grid from '@material-ui/core/Grid';
+import { Fragment } from 'react';
 
 import TodoItem from './TodoItem';
 
 const TodoList = ({ items, toggleComplete, deleteItem }) => (
-	<Grid
-		container
-		justify="center"
-		alignItems="center"
-		direction="column"
-		wrap="nowrap"
-		spacing={3}
-	>
+	<Fragment>
 		{items.map(item => (
 			<TodoItem
 				key={item.id}
-				item={item}
-				toggleComplete={toggleComplete}
-				deleteItem={deleteItem}
+				{...item}
+				toggleComplete={() => toggleComplete(item.id)}
+				deleteItem={() => deleteItem(item.id)}
 			/>
 		))}
-	</Grid>
+	</Fragment>
 );
 
 TodoList.propTypes = {
-	items: PropTypes.array,
-	toggleComplete: PropTypes.func.isRequired
+	items: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			completed: PropTypes.bool.isRequired,
+			text: PropTypes.string.isRequired
+		}).isRequired
+	).isRequired,
+	toggleComplete: PropTypes.func.isRequired,
+	deleteItem: PropTypes.func.isRequired
 };
 
 export default TodoList;
