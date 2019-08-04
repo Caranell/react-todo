@@ -6,7 +6,7 @@ You can see live demo at https://caranell.github.io/react-todo/
 
 #### Installation:  
 
-`git clone https://github.com/Caranell/react-todo.git`
-`cd react-todo`
-`npm i`
-`npm start`
+`git clone https://github.com/Caranell/react-todo.git`  
+`cd react-todo`  
+`npm i`  
+`npm start`  
